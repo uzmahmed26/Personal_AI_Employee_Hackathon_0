@@ -1,0 +1,12 @@
+Sample Task Created: 2026-01-27 13:30:08
+
+This is a sample task file to test the Personal AI Employee system.
+
+Task Description:
+- Process this document
+- Extract relevant information
+- Create summary report
+- Archive when complete
+
+Priority: High
+Deadline: 2026-01-30
