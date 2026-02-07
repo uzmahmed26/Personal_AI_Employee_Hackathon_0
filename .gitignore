@@ -167,3 +167,44 @@ Logs/
 # Credentials (if they exist)
 credentials.json
 token.json
+
+# Node modules
+node_modules/
+MCP_SERVERS/*/node_modules/
+MCP_SERVERS/*/*/node_modules/
+
+# Other build artifacts
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Local config files
+.env
+.local
+config.local
+*.local
+
+# Task and temporary files
+01_Incoming_Tasks/
+02_In_Progress_Tasks/
+03_Completed_Tasks/
+04_Approval_Workflows/
+05_Failed_Tasks/
+Inbox/
+
+# Memory and reports (if these contain sensitive data)
+Memory/
+Reports/
+
+# Credentials and sensitive data
+credentials.json
+token.json
+*.key
+*.pem
+*.crt
+*.cert
+# Ignore root config.json but not MCP_SERVERS config.json files
+config.json
+!MCP_SERVERS/**/config.json
