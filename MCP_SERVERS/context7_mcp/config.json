@@ -1,0 +1,31 @@
+{
+  "server": {
+    "name": "context7",
+    "description": "Context 7 integration for the AI Employee",
+    "capabilities": [
+      "context_analysis",
+      "data_retrieval",
+      "information_processing",
+      "knowledge_base_query"
+    ]
+  },
+  "api_config": {
+    "api_key": "ctx7sk-e4a85452-50e5-4ac0-a590-9987fc59c1aa",
+    "endpoint": "https://mcp.context7.com/mcp",
+    "timeout": 30000,
+    "transport": "http",
+    "headers": {
+      "CONTEXT7_API_KEY": "ctx7sk-e4a85452-50e5-4ac0-a590-9987fc59c1aa"
+    }
+  },
+  "permissions": {
+    "max_concurrent_requests": 5,
+    "allowed_data_types": ["text", "documents", "structured_data"],
+    "blocked_endpoints": []
+  },
+  "security": {
+    "require_approval": true,
+    "dry_run_mode": false,
+    "encryption_required": true
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "server": {
+    "name": "whatsapp",
+    "description": "WhatsApp integration for the AI Employee",
+    "capabilities": [
+      "send_message",
+      "read_messages",
+      "send_media",
+      "check_status"
+    ]
+  },
+  "api_config": {
+    "session_path": "${WHATSAPP_SESSION_PATH}",
+    "headless": true,
+    "timeout": 30000
+  },
+  "permissions": {
+    "auto_reply_keywords": ["urgent", "asap", "invoice", "payment", "help"],
+    "require_approval_above_amount": 0,
+    "allowed_contacts": [],
+    "blocked_contacts": []
+  },
+  "security": {
+    "require_approval": true,
+    "dry_run_mode": false,
+    "rate_limit": 10
+  }
+}

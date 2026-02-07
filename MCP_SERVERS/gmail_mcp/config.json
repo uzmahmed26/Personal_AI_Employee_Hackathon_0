@@ -1,0 +1,31 @@
+{
+  "server": {
+    "name": "gmail",
+    "description": "Gmail integration for the AI Employee",
+    "capabilities": [
+      "send_email",
+      "read_emails",
+      "search_emails",
+      "draft_email",
+      "mark_read",
+      "archive"
+    ]
+  },
+  "api_config": {
+    "oauth_client_id": "${GMAIL_CLIENT_ID}",
+    "oauth_client_secret": "${GMAIL_CLIENT_SECRET}",
+    "credentials_path": "./gmail_credentials.json",
+    "token_path": "./gmail_token.json"
+  },
+  "permissions": {
+    "auto_reply_threshold": 50,
+    "require_approval_above_amount": 0,
+    "allowed_recipients": [],
+    "blocked_recipients": []
+  },
+  "security": {
+    "require_approval": true,
+    "dry_run_mode": false,
+    "rate_limit": 10
+  }
+}

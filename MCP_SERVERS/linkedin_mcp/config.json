@@ -1,0 +1,30 @@
+{
+  "server": {
+    "name": "linkedin",
+    "description": "LinkedIn integration for the AI Employee",
+    "capabilities": [
+      "post_update",
+      "read_posts",
+      "send_connection_requests",
+      "endorse_skills",
+      "comment_on_posts"
+    ]
+  },
+  "api_config": {
+    "access_token": "${LINKEDIN_ACCESS_TOKEN}",
+    "client_id": "${LINKEDIN_CLIENT_ID}",
+    "client_secret": "${LINKEDIN_CLIENT_SECRET}",
+    "redirect_uri": "http://localhost:3000/callback"
+  },
+  "permissions": {
+    "auto_post_limit_per_day": 5,
+    "require_approval_above_amount": 0,
+    "allowed_post_types": ["text", "image", "video"],
+    "blocked_keywords": ["spam", "scam"]
+  },
+  "security": {
+    "require_approval": true,
+    "dry_run_mode": false,
+    "rate_limit": 10
+  }
+}

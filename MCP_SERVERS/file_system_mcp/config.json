@@ -1,0 +1,31 @@
+{
+  "server": {
+    "name": "file_system",
+    "description": "File system operations for the AI Employee",
+    "capabilities": [
+      "read",
+      "write", 
+      "list",
+      "move",
+      "delete"
+    ]
+  },
+  "permissions": {
+    "allowed_paths": [
+      "./Obsidian_Vault/",
+      "./Needs_Action/",
+      "./Done/",
+      "./Plans/",
+      "./Pending_Approval/"
+    ],
+    "restricted_paths": [
+      "/system",
+      "/windows",
+      "/users"
+    ]
+  },
+  "security": {
+    "require_approval": true,
+    "dry_run_mode": false
+  }
+}
