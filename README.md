@@ -2,6 +2,10 @@
 
 Welcome to your Personal AI Employee system! This system consists of two main components that work together to automate task creation from different sources.
 
+## Project Structure
+
+For a complete overview of the folder structure and how the system components work together, see [FOLDER_STRUCTURE.md](FOLDER_STRUCTURE.md).
+
 ## Components
 
 ### 1. File Watcher (`file_watcher.py`)
