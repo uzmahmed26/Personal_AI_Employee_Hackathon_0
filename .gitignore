@@ -219,6 +219,11 @@ Decision_Ledger/*
 
 # Ralph Wiggum session state
 .claude/ralph_state.json
+.claude/settings.local.json
+
+# One-time setup/test scripts
+get_*.py
+test_*.py
 
 # Obsidian — keep config, ignore runtime cache/workspace state
 .obsidian/workspace.json
