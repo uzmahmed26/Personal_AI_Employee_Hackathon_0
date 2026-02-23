@@ -37,11 +37,55 @@ class AutonomousAISystem:
         self.components = {
             'file_watcher': {'process': None, 'restart_count': 0, 'max_restarts': 5},
             'gmail_watcher': {'process': None, 'restart_count': 0, 'max_restarts': 5},
+            'whatsapp_watcher': {'process': None, 'restart_count': 0, 'max_restarts': 5},
             'ralph_loop': {'process': None, 'restart_count': 0, 'max_restarts': 5},
             'task_processor': {'process': None, 'restart_count': 0, 'max_restarts': 5},
-            'notification_system': {'process': None, 'restart_count': 0, 'max_restarts': 5}
+            'notification_system': {'process': None, 'restart_count': 0, 'max_restarts': 5},
+            'task_executor_skill': {'process': None, 'restart_count': 0, 'max_restarts': 5},
+            'dashboard_updater': {'process': None, 'restart_count': 0, 'max_restarts': 3},
         }
+        self.setup_folders()
         self.setup_logs_directory()
+
+    def setup_folders(self):
+        """Create all required workflow and vault folders on startup."""
+        required_folders = [
+            # Core workflow (numbered stages)
+            "01_Incoming_Tasks",
+            "02_In_Progress_Tasks",
+            "03_Completed_Tasks",
+            "04_Approval_Workflows",
+            "05_Failed_Tasks",
+            # Hackathon-spec folder names
+            "Inbox",
+            "Needs_Action",
+            "Done",
+            "Pending_Approval",
+            "Approved",
+            # Intelligence & reporting
+            "Plans",
+            "Memory",
+            "Decision_Ledger",
+            "Logs",
+            "Reports",
+            "Business",
+            # WhatsApp queue
+            "Inbox/whatsapp_queue",
+            # Social media queues
+            "Business/LinkedIn_Queue",
+            "Business/LinkedIn_Queue/Posted",
+            "Business/Facebook_Queue",
+            "Business/Facebook_Queue/Posted",
+            "Business/Twitter_Queue",
+            "Business/Twitter_Queue/Posted",
+            "Business/Instagram_Queue",
+            "Business/Instagram_Queue/Posted",
+            # Briefings
+            "Briefings",
+        ]
+        base = Path(os.path.dirname(os.path.abspath(__file__)))
+        for folder in required_folders:
+            (base / folder).mkdir(parents=True, exist_ok=True)
 
     def setup_logs_directory(self):
         """Create logs directory if it doesn't exist"""
@@ -53,9 +97,14 @@ class AutonomousAISystem:
         logging.info(f"[Autonomous System] Starting {component_name}...")
         try:
             script_name = f"{component_name}.py"
-            self.components[component_name]['process'] = subprocess.Popen([
-                sys.executable, script_name
-            ], cwd=os.path.dirname(os.path.abspath(__file__)), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # Some components need extra arguments for continuous/watch mode
+            extra_args = {
+                'dashboard_updater': ['--watch', '--interval', '60'],
+            }
+            cmd = [sys.executable, script_name] + extra_args.get(component_name, [])
+            self.components[component_name]['process'] = subprocess.Popen(
+                cmd, cwd=os.path.dirname(os.path.abspath(__file__)),
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             self.components[component_name]['restart_count'] = 0  # Reset restart count on successful start
             logging.info(f"[Autonomous System] {component_name} started successfully with PID {self.components[component_name]['process'].pid}")
         except Exception as e:
@@ -85,6 +134,24 @@ class AutonomousAISystem:
             
             time.sleep(5)  # Check every 5 seconds
 
+    def _initial_setup(self):
+        """Run one-off startup tasks: generate initial dashboard and auto-plans."""
+        try:
+            subprocess.run([sys.executable, "dashboard_updater.py"],
+                           cwd=os.path.dirname(os.path.abspath(__file__)),
+                           timeout=30)
+            logging.info("Initial Dashboard.md generated")
+        except Exception as e:
+            logging.warning(f"Could not generate initial dashboard: {e}")
+
+        try:
+            subprocess.run([sys.executable, "plan_generator.py", "--auto"],
+                           cwd=os.path.dirname(os.path.abspath(__file__)),
+                           timeout=30)
+            logging.info("Auto-plans generated for pending tasks")
+        except Exception as e:
+            logging.warning(f"Could not auto-generate plans: {e}")
+
     def generate_weekly_reports(self):
         """Generate weekly reports periodically"""
         while self.running:
@@ -107,6 +174,9 @@ class AutonomousAISystem:
         print("="*60)
 
         self.running = True
+
+        # Run initial setup tasks synchronously before starting background components
+        self._initial_setup()
 
         # Start all components
         self.start_all_components()

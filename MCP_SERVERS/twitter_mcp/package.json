@@ -1,0 +1,15 @@
+{
+  "name": "twitter-mcp-server",
+  "version": "1.0.0",
+  "description": "Twitter/X MCP server for Personal AI Employee — API v2 integration",
+  "type": "module",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "axios": "^1.6.0"
+  },
+  "keywords": ["mcp", "twitter", "x", "ai", "automation"],
+  "author": "Personal AI Employee",
+  "license": "MIT"
+}

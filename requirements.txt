@@ -1,4 +1,22 @@
+# Google APIs (Gmail watcher)
 google-api-python-client==2.148.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.0
+
+# Notifications
 plyer==2.1.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# HTTP requests (WhatsApp, social media watchers)
+requests>=2.31.0
+
+# YAML frontmatter parsing
+pyyaml>=6.0
+
+# System monitoring
+psutil>=5.9.0
+
+# Terminal colors
+colorama>=0.4.6

@@ -1,21 +1,24 @@
 {
   "name": "gmail-mcp-server",
-  "version": "1.0.0",
-  "description": "Gmail MCP server for the Personal AI Employee with OAuth",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "Gmail MCP server for Personal AI Employee — proper MCP protocol over stdio",
+  "type": "module",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "http": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "googleapis": "^126.0.1",
-    "cors": "^2.8.5"
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "axios": "^1.6.0",
+    "googleapis": "^126.0.1"
   },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
-  "keywords": ["mcp", "gmail", "oauth", "ai", "automation"],
+  "keywords": [
+    "mcp",
+    "gmail",
+    "ai",
+    "automation"
+  ],
   "author": "Personal AI Employee",
   "license": "MIT"
 }

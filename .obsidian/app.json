@@ -1,0 +1,14 @@
+{
+  "defaultViewMode": "preview",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "01_Incoming_Tasks",
+  "attachmentFolderPath": "Memory/Attachments",
+  "promptDelete": true,
+  "trashOption": "local",
+  "showLineNumber": true,
+  "readableLineLength": true,
+  "strictLineBreaks": false,
+  "showFrontmatter": false,
+  "livePreview": true,
+  "defaultOpen": "Home"
+}

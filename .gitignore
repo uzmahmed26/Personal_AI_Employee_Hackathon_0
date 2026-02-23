@@ -161,20 +161,19 @@ BrowserMetrics/
 Crashpad/
 Default/
 
-# Log files
-Logs/
+# Log files (excluding the Logs directory itself to allow important logs)
+*.log
 
 # Credentials (if they exist)
 credentials.json
 token.json
 
-# Node modules
+# Node modules (completely exclude these)
 node_modules/
 MCP_SERVERS/*/node_modules/
 MCP_SERVERS/*/*/node_modules/
 
 # Other build artifacts
-*.log
 *.tmp
 *.temp
 .DS_Store
@@ -186,25 +185,53 @@ Thumbs.db
 config.local
 *.local
 
-# Task and temporary files
-01_Incoming_Tasks/
-02_In_Progress_Tasks/
-03_Completed_Tasks/
-04_Approval_Workflows/
-05_Failed_Tasks/
-Inbox/
+# Task directories - exclude runtime task files but keep .gitkeep
+01_Incoming_Tasks/*
+02_In_Progress_Tasks/*
+03_Completed_Tasks/*
+04_Approval_Workflows/*
+05_Failed_Tasks/*
+Inbox/*
+Needs_Action/*
+Done/*
+Pending_Approval/*
+Approved/*
+Plans/*
+!01_Incoming_Tasks/.gitkeep
+!02_In_Progress_Tasks/.gitkeep
+!03_Completed_Tasks/.gitkeep
+!04_Approval_Workflows/.gitkeep
+!05_Failed_Tasks/.gitkeep
+!Inbox/.gitkeep
+!Needs_Action/.gitkeep
+!Done/.gitkeep
+!Pending_Approval/.gitkeep
+!Approved/.gitkeep
+!Plans/.gitkeep
 
-# Memory and reports (if these contain sensitive data)
-Memory/
-Reports/
+# Memory and reports - exclude runtime data
+Memory/*
+Reports/*
+Decision_Ledger/*
+!Memory/.gitkeep
+!Reports/.gitkeep
+!Decision_Ledger/.gitkeep
+
+# Ralph Wiggum session state
+.claude/ralph_state.json
+
+# Obsidian — keep config, ignore runtime cache/workspace state
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/plugins/*/data.json
 
 # Credentials and sensitive data
-credentials.json
-token.json
 *.key
 *.pem
 *.crt
 *.cert
+
 # Ignore root config.json but not MCP_SERVERS config.json files
 config.json
 !MCP_SERVERS/**/config.json

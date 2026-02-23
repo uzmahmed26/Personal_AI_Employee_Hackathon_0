@@ -18,10 +18,16 @@ from typing import Optional
 
 
 # Configuration
-VAULT_PATH = r"C:\Users\laptop world\Desktop\Hack00"
-PENDING_DIR = os.path.join(VAULT_PATH, "04_Approval_Workflows", "Pending")
-APPROVED_DIR = os.path.join(VAULT_PATH, "04_Approval_Workflows", "Approved")
-REJECTED_DIR = os.path.join(VAULT_PATH, "04_Approval_Workflows", "Rejected")
+VAULT_PATH = Path(__file__).parent
+# Support both the numbered workflow folder and the hackathon-spec named folders
+PENDING_DIRS = [
+    VAULT_PATH / "Pending_Approval",           # Hackathon spec (primary)
+    VAULT_PATH / "04_Approval_Workflows",      # Numbered workflow folder
+    VAULT_PATH / "04_Approval_Workflows" / "Pending",  # Legacy sub-folder
+]
+PENDING_DIR = str(VAULT_PATH / "Pending_Approval")   # Default write location
+APPROVED_DIR = str(VAULT_PATH / "Approved")
+REJECTED_DIR = str(VAULT_PATH / "04_Approval_Workflows" / "Rejected")
 
 
 def get_colorama():
@@ -66,12 +72,11 @@ def list_approvals():
     BLUE = colorama.Fore.BLUE if colorama else ""
     RESET = colorama.Style.RESET_ALL if colorama else ""
     
-    pending_dir = Path(PENDING_DIR)
-    if not pending_dir.exists():
-        print(f"{RED}Error: Pending directory does not exist: {PENDING_DIR}{RESET}")
-        return
-    
-    files = list(pending_dir.glob("*.md"))
+    # Collect files from all pending directories
+    files = []
+    for pending_dir in PENDING_DIRS:
+        if Path(pending_dir).exists():
+            files.extend(list(Path(pending_dir).glob("*.md")))
     if not files:
         print(f"{YELLOW}No pending approvals found.{RESET}")
         return
@@ -156,16 +161,22 @@ def show_approval(filename: str):
     RED = colorama.Fore.RED if colorama else ""
     RESET = colorama.Style.RESET_ALL if colorama else ""
     
-    file_path = Path(PENDING_DIR) / filename
-    
-    if not file_path.exists():
-        print(f"{RED}Error: File not found: {file_path}{RESET}")
+    # Search for the file across all pending directories
+    file_path = None
+    for pdir in PENDING_DIRS:
+        candidate = Path(pdir) / filename
+        if candidate.exists():
+            file_path = candidate
+            break
+
+    if file_path is None:
+        print(f"{RED}Error: File not found in any pending directory: {filename}{RESET}")
         return
-    
+
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         print(f"{CYAN}=== APPROVAL REQUEST DETAILS ==={RESET}\n")
         print(content)
         print(f"\n{MAGENTA}=== END OF CONTENT ==={RESET}")
@@ -183,17 +194,23 @@ def approve_file(filename: str):
     RED = colorama.Fore.RED if colorama else ""
     RESET = colorama.Style.RESET_ALL if colorama else ""
     
-    file_path = Path(PENDING_DIR) / filename
-    
-    if not file_path.exists():
-        print(f"{RED}Error: File not found: {file_path}{RESET}")
+    # Search for the file across all pending directories
+    file_path = None
+    for pdir in PENDING_DIRS:
+        candidate = Path(pdir) / filename
+        if candidate.exists():
+            file_path = candidate
+            break
+
+    if file_path is None:
+        print(f"{RED}Error: File not found in any pending directory: {filename}{RESET}")
         return
-    
+
     try:
         # Read the current content
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
+
         # Parse frontmatter
         if content.startswith('---'):
             end_frontmatter = content.find('---', 3)
@@ -245,12 +262,18 @@ def reject_file(filename: str):
     YELLOW = colorama.Fore.YELLOW if colorama else ""
     RESET = colorama.Style.RESET_ALL if colorama else ""
     
-    file_path = Path(PENDING_DIR) / filename
-    
-    if not file_path.exists():
-        print(f"{RED}Error: File not found: {file_path}{RESET}")
+    # Search for the file across all pending directories
+    file_path = None
+    for pdir in PENDING_DIRS:
+        candidate = Path(pdir) / filename
+        if candidate.exists():
+            file_path = candidate
+            break
+
+    if file_path is None:
+        print(f"{RED}Error: File not found in any pending directory: {filename}{RESET}")
         return
-    
+
     try:
         # Get rejection reason from user
         reason = input(f"{YELLOW}Enter rejection reason (optional): {RESET}").strip()

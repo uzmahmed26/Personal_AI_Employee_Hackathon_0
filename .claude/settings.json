@@ -1,0 +1,92 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python ralph_wiggum_hook.py"
+          }
+        ]
+      }
+    ]
+  },
+  "mcpServers": {
+    "gmail": {
+      "command": "node",
+      "args": ["MCP_SERVERS/gmail_mcp/index.js"],
+      "env": {
+        "GMAIL_CLIENT_ID": "${GMAIL_CLIENT_ID}",
+        "GMAIL_CLIENT_SECRET": "${GMAIL_CLIENT_SECRET}",
+        "GMAIL_REFRESH_TOKEN": "${GMAIL_REFRESH_TOKEN}",
+        "GMAIL_ACCESS_TOKEN": "${GMAIL_ACCESS_TOKEN}"
+      }
+    },
+    "linkedin": {
+      "command": "node",
+      "args": ["MCP_SERVERS/linkedin_mcp/index.js"],
+      "env": {
+        "LINKEDIN_ACCESS_TOKEN": "${LINKEDIN_ACCESS_TOKEN}",
+        "LINKEDIN_CLIENT_ID": "${LINKEDIN_CLIENT_ID}",
+        "LINKEDIN_CLIENT_SECRET": "${LINKEDIN_CLIENT_SECRET}"
+      }
+    },
+    "whatsapp": {
+      "command": "node",
+      "args": ["MCP_SERVERS/whatsapp_mcp/index.js"],
+      "env": {
+        "WHATSAPP_ACCESS_TOKEN": "${WHATSAPP_ACCESS_TOKEN}",
+        "WHATSAPP_PHONE_NUMBER_ID": "${WHATSAPP_PHONE_NUMBER_ID}",
+        "WHATSAPP_WEBHOOK_VERIFY_TOKEN": "${WHATSAPP_WEBHOOK_VERIFY_TOKEN}"
+      }
+    },
+    "odoo": {
+      "command": "node",
+      "args": ["MCP_SERVERS/odoo_mcp/index.js"],
+      "env": {
+        "ODOO_URL": "${ODOO_URL}",
+        "ODOO_DB": "${ODOO_DB}",
+        "ODOO_USERNAME": "${ODOO_USERNAME}",
+        "ODOO_PASSWORD": "${ODOO_PASSWORD}"
+      }
+    },
+    "facebook": {
+      "command": "node",
+      "args": ["MCP_SERVERS/facebook_mcp/index.js"],
+      "env": {
+        "FB_PAGE_ID": "${FB_PAGE_ID}",
+        "FB_PAGE_ACCESS_TOKEN": "${FB_PAGE_ACCESS_TOKEN}",
+        "FB_APP_ID": "${FB_APP_ID}",
+        "FB_APP_SECRET": "${FB_APP_SECRET}"
+      }
+    },
+    "twitter": {
+      "command": "node",
+      "args": ["MCP_SERVERS/twitter_mcp/index.js"],
+      "env": {
+        "TWITTER_API_KEY": "${TWITTER_API_KEY}",
+        "TWITTER_API_SECRET": "${TWITTER_API_SECRET}",
+        "TWITTER_ACCESS_TOKEN": "${TWITTER_ACCESS_TOKEN}",
+        "TWITTER_ACCESS_TOKEN_SECRET": "${TWITTER_ACCESS_TOKEN_SECRET}",
+        "TWITTER_BEARER_TOKEN": "${TWITTER_BEARER_TOKEN}",
+        "TWITTER_USER_ID": "${TWITTER_USER_ID}"
+      }
+    },
+    "instagram": {
+      "command": "node",
+      "args": ["MCP_SERVERS/instagram_mcp/index.js"],
+      "env": {
+        "IG_USER_ID": "${IG_USER_ID}",
+        "FB_PAGE_ACCESS_TOKEN": "${FB_PAGE_ACCESS_TOKEN}"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "10000"
+      }
+    }
+  }
+}

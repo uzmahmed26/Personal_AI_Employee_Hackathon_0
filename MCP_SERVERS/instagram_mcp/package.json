@@ -1,0 +1,15 @@
+{
+  "name": "instagram-mcp-server",
+  "version": "1.0.0",
+  "description": "Instagram MCP server for Personal AI Employee — Graph API integration",
+  "type": "module",
+  "main": "index.js",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "axios": "^1.6.0"
+  },
+  "keywords": ["mcp", "instagram", "ai", "automation"],
+  "author": "Personal AI Employee",
+  "license": "MIT"
+}
