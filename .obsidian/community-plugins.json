@@ -1,1 +1,8 @@
-["dataview","obsidian-kanban","templater-obsidian"]
+[
+  "dataview",
+  "obsidian-kanban",
+  "templater-obsidian",
+  "calendar",
+  "obsidian-tasks-plugin",
+  "obsidian-minimal-settings"
+]
