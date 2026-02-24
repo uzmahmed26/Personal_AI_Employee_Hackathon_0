@@ -7,6 +7,13 @@ import signal
 import sys
 from pathlib import Path
 
+# Load .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / '.env')
+except ImportError:
+    pass
+
 # Google API imports
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -27,69 +34,55 @@ tasks_path = Path(VAULT_PATH) / TASKS_FOLDER
 
 def authenticate_gmail():
     """
-    Authenticate with Gmail API using OAuth 2.0
-    
+    Authenticate with Gmail API using tokens from .env or token.json fallback.
+
     Returns:
         service: Gmail API service object
     """
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Authenticating with Gmail...")
-    
+
     creds = None
-    
-    # Check if token file exists (stored credentials from previous runs)
-    if os.path.exists(TOKEN_FILE):
+
+    # Try to build credentials from .env environment variables first
+    client_id = os.environ.get('GMAIL_CLIENT_ID') or os.environ.get('GOOGLE_CLIENT_ID')
+    client_secret = os.environ.get('GMAIL_CLIENT_SECRET') or os.environ.get('GOOGLE_CLIENT_SECRET')
+    refresh_token = os.environ.get('GMAIL_REFRESH_TOKEN') or os.environ.get('GOOGLE_REFRESH_TOKEN')
+
+    if client_id and client_secret and refresh_token:
         try:
-            creds = Credentials.from_authorized_user_file(TOKEN_FILE, ['https://www.googleapis.com/auth/gmail.readonly'])
-        except Exception as e:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Error loading token: {str(e)}")
-    
-    # If there are no valid credentials, initiate the OAuth flow
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] Refreshing credentials...")
-                creds.refresh(Request())
-            except RefreshError:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] Token refresh failed. Need to re-authenticate.")
-                # Delete the expired token file to force re-authentication
-                if os.path.exists(TOKEN_FILE):
-                    os.remove(TOKEN_FILE)
-                creds = None
-        
-        if not creds:
-            # Check if credentials.json exists
-            if not os.path.exists(CREDENTIALS_FILE):
-                raise FileNotFoundError(
-                    f"Credentials file '{CREDENTIALS_FILE}' not found. "
-                    f"Please follow the setup instructions to create this file."
-                )
-            
-            # Start the OAuth flow
-            flow = Flow.from_client_secrets_file(
-                CREDENTIALS_FILE,
-                scopes=['https://www.googleapis.com/auth/gmail.readonly'],
-                redirect_uri='urn:ietf:wg:oauth:2.0:oob'
+            creds = Credentials(
+                token=os.environ.get('GMAIL_ACCESS_TOKEN') or os.environ.get('GOOGLE_ACCESS_TOKEN'),
+                refresh_token=refresh_token,
+                token_uri='https://oauth2.googleapis.com/token',
+                client_id=client_id,
+                client_secret=client_secret,
+                scopes=['https://www.googleapis.com/auth/gmail.modify']
             )
-            
-            # Get authorization URL
-            auth_url, _ = flow.authorization_url(prompt='consent')
-            
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Please visit this URL to authorize the application:")
-            print(auth_url)
-            print()
-            print(f"After authorizing, copy the verification code and paste it below:")
-            
-            # Get the authorization code from user
-            code = input("Enter the verification code: ")
-            
-            # Exchange the code for credentials
-            flow.fetch_token(code=code)
-            creds = flow.credentials
-            
-            # Save the credentials for next run
-            with open(TOKEN_FILE, 'w') as token:
-                token.write(creds.to_json())
-    
+            # Refresh the access token if needed
+            if not creds.valid:
+                creds.refresh(Request())
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Loaded credentials from environment variables")
+        except Exception as e:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Error building credentials from env: {str(e)}")
+            creds = None
+
+    # Fallback: check if token.json exists
+    if not creds and os.path.exists(TOKEN_FILE):
+        try:
+            creds = Credentials.from_authorized_user_file(TOKEN_FILE, ['https://www.googleapis.com/auth/gmail.modify'])
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Loaded credentials from {TOKEN_FILE}")
+        except Exception as e:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Error loading token file: {str(e)}")
+            creds = None
+
+    if not creds:
+        raise RuntimeError(
+            "Gmail authentication failed. Set GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, "
+            "and GMAIL_REFRESH_TOKEN in .env file."
+        )
+
     # Build the Gmail API service
     service = build('gmail', 'v1', credentials=creds)
     

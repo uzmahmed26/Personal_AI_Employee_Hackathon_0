@@ -35,7 +35,7 @@ class NotificationSystem:
     def setup_logs_directory(self):
         """Create logs directory if it doesn't exist"""
         logs_path.mkdir(parents=True, exist_ok=True)
-        print(f"📁 [{datetime.now().strftime('%H:%M:%S')}] Created logs directory: {logs_path}")
+        print(f"[FOLDER] [{datetime.now().strftime('%H:%M:%S')}] Created logs directory: {logs_path}")
     
     def load_notification_log(self):
         """Load previously sent notifications to avoid duplicates"""
@@ -93,14 +93,14 @@ class NotificationSystem:
                 app_name="Personal AI Employee",
                 timeout=10  # Duration in seconds
             )
-            print(f"🔔 [{datetime.now().strftime('%H:%M:%S')}] Desktop notification sent: {title}")
+            print(f"[BELL] [{datetime.now().strftime('%H:%M:%S')}] Desktop notification sent: {title}")
         except Exception as e:
             print(f"Error sending desktop notification: {e}")
     
     def send_email_notification(self, subject, body, recipient_email=None):
         """Send an email notification (requires SMTP configuration)"""
         # This is a simplified version - in practice, you'd need proper SMTP setup
-        print(f"📧 [{datetime.now().strftime('%H:%M:%S')}] Email notification ready: {subject}")
+        print(f"[EMAIL] [{datetime.now().strftime('%H:%M:%S')}] Email notification ready: {subject}")
         print("   Note: Email notifications require SMTP configuration")
     
     def check_new_tasks(self):
@@ -132,18 +132,18 @@ class NotificationSystem:
             
             # Title varies based on priority
             if priority in ["high", "critical"]:
-                title = f"🚨 HIGH PRIORITY TASK: {task_name}"
+                title = f"[URGENT] HIGH PRIORITY TASK: {task_name}"
             elif priority == "low":
-                title = f"📋 Low Priority Task: {task_name}"
+                title = f"[LOW] Low Priority Task: {task_name}"
             else:
-                title = f"🆕 New Task: {task_name}"
+                title = f"[NEW] New Task: {task_name}"
             
             # Send desktop notification
             self.send_desktop_notification(title, message, priority)
             
             # For high priority tasks, also consider sending email
             if priority in ["high", "critical"]:
-                email_subject = f"🚨 High Priority Task Alert: {task_name}"
+                email_subject = f"[URGENT] High Priority Task Alert: {task_name}"
                 email_body = f"A high priority task has been added to your queue:\n\n{message}\n\nTime: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                 self.send_email_notification(email_subject, email_body)
             
@@ -170,7 +170,7 @@ class NotificationSystem:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Sleeping for {check_interval} seconds...")
                 time.sleep(check_interval)
         except KeyboardInterrupt:
-            print(f"\n🛑 [{datetime.now().strftime('%H:%M:%S')}] Notification system stopped by user")
+            print(f"\n[STOP] [{datetime.now().strftime('%H:%M:%S')}] Notification system stopped by user")
             self.save_notification_log()
     
     def run_once(self):
@@ -185,7 +185,7 @@ def setup_directories():
     for directory in directories:
         if not directory.exists():
             directory.mkdir(parents=True, exist_ok=True)
-            print(f"📁 [{datetime.now().strftime('%H:%M:%S')}] Created directory: {directory}")
+            print(f"[FOLDER] [{datetime.now().strftime('%H:%M:%S')}] Created directory: {directory}")
 
 def main():
     """Main function to run the notification system"""
@@ -194,11 +194,9 @@ def main():
     
     # Create and run the notification system
     notifier = NotificationSystem()
-    
-    # For now, run once to check for any existing new tasks
-    notifier.run_once()
-    
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Notification check completed!")
+
+    # Run continuously monitoring for new tasks
+    notifier.run_monitoring(check_interval=30)
 
 if __name__ == "__main__":
     main()

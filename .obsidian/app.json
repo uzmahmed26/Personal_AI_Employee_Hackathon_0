@@ -1,4 +1,6 @@
 {
+  "interfaceFontSize": 14,
+  "textFontSize": 16,
   "defaultViewMode": "preview",
   "newFileLocation": "folder",
   "newFileFolderPath": "01_Incoming_Tasks",

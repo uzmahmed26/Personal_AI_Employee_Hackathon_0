@@ -279,11 +279,11 @@ def setup_directories():
     for directory in directories:
         if not directory.exists():
             directory.mkdir(parents=True, exist_ok=True)
-            print(f"📁 [{datetime.now().strftime('%H:%M:%S')}] Created directory: {directory}")
+            print(f"[FOLDER] [{datetime.now().strftime('%H:%M:%S')}] Created directory: {directory}")
 
 def main():
     """
-    Main function to run the task processor
+    Main function to run the task processor continuously
     """
     print("="*60)
     print("Task Processor - Personal AI Employee System")
@@ -294,13 +294,18 @@ def main():
     # Setup required directories
     setup_directories()
 
-    # Process tasks in all folders
-    process_incoming_tasks()
-    process_in_progress_tasks()
-    process_approval_workflows()
-    process_completed_tasks()
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Task processor running (checking every 30 seconds)...")
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Task processing completed!")
+    try:
+        while True:
+            process_incoming_tasks()
+            process_in_progress_tasks()
+            process_approval_workflows()
+            process_completed_tasks()
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Processing cycle completed. Sleeping 30s...")
+            time.sleep(30)
+    except KeyboardInterrupt:
+        print(f"\n[{datetime.now().strftime('%H:%M:%S')}] Task processor stopped.")
 
 if __name__ == "__main__":
     main()

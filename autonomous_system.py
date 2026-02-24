@@ -41,7 +41,6 @@ class AutonomousAISystem:
             'ralph_loop': {'process': None, 'restart_count': 0, 'max_restarts': 5},
             'task_processor': {'process': None, 'restart_count': 0, 'max_restarts': 5},
             'notification_system': {'process': None, 'restart_count': 0, 'max_restarts': 5},
-            'task_executor_skill': {'process': None, 'restart_count': 0, 'max_restarts': 5},
             'dashboard_updater': {'process': None, 'restart_count': 0, 'max_restarts': 3},
         }
         self.setup_folders()
@@ -169,7 +168,7 @@ class AutonomousAISystem:
     def start_system(self):
         """Start the entire autonomous AI employee system"""
         print("="*60)
-        print("🤖 Autonomous Personal AI Employee System")
+        print("[AI] Autonomous Personal AI Employee System")
         print(f"Started: {time.strftime('%Y-%m-%d %H:%M:%S')}")
         print("="*60)
 
@@ -181,11 +180,11 @@ class AutonomousAISystem:
         # Start all components
         self.start_all_components()
 
-        print("\n📋 System Status:")
+        print("\n[STATUS] System Status:")
         for component_name in self.components.keys():
             print(f"   • {component_name.replace('_', ' ').title()}: STARTED")
-        print("\n💡 System running with crash recovery and autonomous features enabled")
-        print("💡 Press Ctrl+C to shut down the system safely")
+        print("\n[INFO] System running with crash recovery and autonomous features enabled")
+        print("[INFO] Press Ctrl+C to shut down the system safely")
 
         # Start monitoring thread
         monitor_thread = threading.Thread(target=self.monitor_components, daemon=True)
@@ -219,13 +218,13 @@ class AutonomousAISystem:
                 except Exception as e:
                     logging.error(f"Error terminating {component_name}: {e}")
 
-        logging.info("✅ Autonomous Personal AI Employee System shut down successfully!")
+        logging.info("[OK] Autonomous Personal AI Employee System shut down successfully!")
         self.running = False
         sys.exit(0)
 
 def signal_handler(sig, frame):
     """Handle graceful shutdown when Ctrl+C is pressed"""
-    logging.info("\n⚠️  Received interrupt signal, shutting down gracefully...")
+    logging.info("\n[WARN]  Received interrupt signal, shutting down gracefully...")
     sys.exit(0)
 
 def main():
