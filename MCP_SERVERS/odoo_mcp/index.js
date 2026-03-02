@@ -60,9 +60,11 @@ async function odooAuthenticate() {
   if (_uid) return _uid;
   const cfg = getOdooConfig();
 
-  const res = await axios.post(`${cfg.url}/web/dataset/call_kw`, {
+  // Use /jsonrpc — the standard Odoo External API endpoint for authentication
+  const res = await axios.post(`${cfg.url}/jsonrpc`, {
     jsonrpc: "2.0",
     method: "call",
+    id: 1,
     params: {
       service: "common",
       method: "authenticate",
@@ -70,7 +72,7 @@ async function odooAuthenticate() {
     },
   });
 
-  if (!res.data.result) throw new Error("Odoo authentication failed. Check credentials.");
+  if (!res.data.result) throw new Error("Odoo authentication failed. Check credentials in .env (ODOO_DB, ODOO_USERNAME, ODOO_PASSWORD).");
   _uid = res.data.result;
   return _uid;
 }
@@ -79,17 +81,16 @@ async function odooCall(model, method, args = [], kwargs = {}) {
   const cfg = getOdooConfig();
   const uid = await odooAuthenticate();
 
-  const res = await axios.post(`${cfg.url}/web/dataset/call_kw`, {
+  // Use /jsonrpc with service "object" and execute_kw — the standard stateless External API
+  // Passes db, uid, password on every call (no cookie/session required)
+  const res = await axios.post(`${cfg.url}/jsonrpc`, {
     jsonrpc: "2.0",
     method: "call",
+    id: Date.now(),
     params: {
-      model,
-      method,
-      args,
-      kwargs: {
-        ...kwargs,
-        context: { lang: "en_US", tz: "UTC" },
-      },
+      service: "object",
+      method: "execute_kw",
+      args: [cfg.db, uid, cfg.password, model, method, args, { ...kwargs, context: { lang: "en_US", tz: "UTC" } }],
     },
   });
 
